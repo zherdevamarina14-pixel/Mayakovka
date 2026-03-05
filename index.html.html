@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МАНИФЕСТ КРАСОТЫ | МАЯКОВКА`4</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Georgia','Times New Roman',serif;
+  background-color:#FAF3E8;
+  color:#1A1208;
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(139,90,40,0.04) 0,rgba(139,90,40,0.04) 1px,transparent 1px,transparent 36px),
+    repeating-linear-gradient(90deg,rgba(139,90,40,0.04) 0,rgba(139,90,40,0.04) 1px,transparent 1px,transparent 36px);
+  pointer-events:none;z-index:0;
+}
+#root{position:relative;z-index:1;}
+.MF{font-family:'Oswald','Arial Black',Impact,sans-serif;}
+.stripe{background:repeating-linear-gradient(45deg,rgba(212,43,43,0.25) 0,rgba(212,43,43,0.25) 7px,transparent 7px,transparent 22px,rgba(245,200,0,0.2) 22px,rgba(245,200,0,0.2) 29px,transparent 29px,transparent 44px);}
+input,select,textarea{
+  background:#fff;border:2px solid #1A1208;
+  padding:7px 10px;font-family:'Georgia',serif;font-size:14px;
+  outline:none;width:100%;border-radius:0;color:#1A1208;
+}
+input:focus,select:focus,textarea:focus{outline:3px solid #F5C800;outline-offset:-1px;}
+select option{background:#faf3e8;}
+optgroup{font-weight:bold;font-style:normal;}
+button{cursor:pointer;font-family:'Oswald','Arial Black',sans-serif;border-radius:0;}
+.btn-r{background:#D42B2B;color:#fff;border:3px solid #1A1208;padding:10px 18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;transition:all .14s;}
+.btn-r:hover{background:#b01f1f;}
+.btn-b{background:#1A3A9A;color:#fff;border:3px solid #1A1208;padding:10px 18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;transition:all .14s;}
+.btn-b:hover{background:#122870;}
+.btn-y{background:#F5C800;color:#1A1208;border:3px solid #1A1208;padding:10px 18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;transition:all .14s;}
+.btn-y:hover{background:#d4ac00;}
+.btn-g{background:transparent;color:#1A1208;border:2px solid #1A1208;padding:8px 14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;transition:all .14s;}
+.btn-g:hover{background:#1A1208;color:#FAF3E8;}
+.card{background:#fff;border:3px solid #1A1208;}
+table{width:100%;border-collapse:collapse;}
+th{background:#1A1208;color:#F5C800;padding:8px 10px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-family:'Oswald',sans-serif;font-weight:700;text-align:left;}
+td{padding:8px 10px;border-bottom:1px solid #d4c4a8;font-size:13px;vertical-align:middle;}
+tr:nth-child(even) td{background:#f7f0e6;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeIn .3s ease;}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#faf3e8}
+::-webkit-scrollbar-thumb{background:#1A1208}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef}=React;
+
+// ── ДАННЫЕ ─────────────────────────────────────────────────
+
+const SLOGANS=[
+  "Товарищ! Блонд без ухода — преступление перед народом!",
+  "Кто не считает граммы — тот работает на капитализм!",
+  "Ножницы в руки, таблицу в голову — и ни шагу назад!",
+  "Не знаешь себестоимость? Ты — враг собственной выручки!",
+  "Долой серые корни! Да здравствует пигмент и точный расчёт!",
+  "Мастер без калькулятора — партизан без карты боевых действий!",
+  "Каждый тон в масть — шаг к светлому будущему клиента!",
+  "Учёт материалов — основа революционной красоты!",
+  "Балаяж без прибыли — путь к унынию и кредитам!",
+  "Товарищ мастер, считай до копейки — и живёшь в достатке!",
+  "Грамм краски на весах — рубль в кармане мастера. СЧИТАЙ!",
+  "Да здравствует точный граммаж и справедливый прайс-лист!",
+  "Крась смело, считай верно — и клиент вернётся снова!",
+  "Без учёта нет победы над хаосом в голове и в кассе!",
+  "МАЯКОВКА`4 даёт знания. Знания дают прибыль. Прибыль даёт свободу!",
+];
+
+const MATS=[
+  {id:1, name:"CROMAKEY TIME 10 (Emsibeth)",        unit:"гр", price:11.0828, cat:"🎨 Красители"},
+  {id:2, name:"THERMAL COLOR SPA (Emsibeth)",       unit:"гр", price:12.98,   cat:"🎨 Красители"},
+  {id:3, name:"Порошок White compact (Emsibeth)",   unit:"гр", price:5.1667,  cat:"🎨 Красители"},
+  {id:4, name:"Pure Happy Chroma пигмент",          unit:"гр", price:20.00,   cat:"🎨 Красители"},
+  {id:5, name:"NOTA PURA масло (Arpege)",           unit:"гр", price:12.67,   cat:"🎨 Красители"},
+  {id:6, name:"Cromakey-In Multibenefit (Emsibeth)",unit:"гр", price:11.50,   cat:"🎨 Красители"},
+  {id:7, name:"ARPEGE OPERA MELODY (Arpege)",       unit:"гр", price:16.65,   cat:"🎨 Красители"},
+  {id:8, name:"PURE HAPPY CHROMA — 2-я партия",     unit:"гр", price:32.39,   cat:"🎨 Красители"},
+  {id:9, name:"Оксид Nano Brazil",                  unit:"мл", price:0.4524,  cat:"⚗️ Оксиды"},
+  {id:10,name:"Активатор Cromakey 20VOL 6%",        unit:"мл", price:1.204,   cat:"⚗️ Оксиды"},
+  {id:11,name:"Активатор Arpege Be On Set 1%",      unit:"мл", price:1.67,    cat:"⚗️ Оксиды"},
+  {id:12,name:"Шампунь Arpege Haircare",            unit:"мл", price:3.031,   cat:"🧴 Техничка"},
+  {id:13,name:"Кондиционер Arpege Haircare",        unit:"мл", price:4.996,   cat:"🧴 Техничка"},
+  {id:14,name:"Шампунь HS нейтрализующий",          unit:"мл", price:2.09,    cat:"🧴 Техничка"},
+  {id:15,name:"Кондиционер HS оттеночный",          unit:"мл", price:2.84,    cat:"🧴 Техничка"},
+  {id:16,name:"Шампунь HS для окрашенных",          unit:"мл", price:2.09,    cat:"🧴 Техничка"},
+  {id:17,name:"Кондиционер HS для окрашенных",      unit:"мл", price:2.39,    cat:"🧴 Техничка"},
+  {id:18,name:"Шампунь HS для натуральных",         unit:"мл", price:2.09,    cat:"🧴 Техничка"},
+  {id:19,name:"Кондиционер HS для натуральных",     unit:"мл", price:2.39,    cat:"🧴 Техничка"},
+  {id:20,name:"Arpège Shampoo (технический)",       unit:"мл", price:2.10,    cat:"🧴 Техничка"},
+  {id:21,name:"Veg.Smooth Fluid кератин (Keyliss)", unit:"мл", price:11.67,   cat:"🧪 Уход"},
+  {id:22,name:"Набор CONCENTRATE Hair Sekta",       unit:"мл", price:13.88,   cat:"🧪 Уход"},
+  {id:23,name:"REB.LOOM Шампунь (шаг 1)",          unit:"мл", price:4.546,   cat:"🧪 Уход"},
+  {id:24,name:"REB.LOOM Эссенция (ампулы)",        unit:"мл", price:64.27,   cat:"🧪 Уход"},
+  {id:25,name:"REB.LOOM Жидкость (шаг 2)",         unit:"мл", price:15.303,  cat:"🧪 Уход"},
+  {id:26,name:"REB.LOOM Маска (шаг 3)",            unit:"гр", price:6.69,    cat:"🧪 Уход"},
+  {id:27,name:"REB.LOOM DD Fluid Leave in",        unit:"мл", price:20.07,   cat:"🧪 Уход"},
+  {id:28,name:"Маска HS Раньше было лучше",         unit:"гр", price:2.976,   cat:"🧪 Уход"},
+  {id:29,name:"Протеиновая маска HS (300 мл)",      unit:"гр", price:3.48,    cat:"🧪 Уход"},
+  {id:30,name:"Протеиновая маска HS (1050 мл)",     unit:"гр", price:2.36,    cat:"🧪 Уход"},
+  {id:31,name:"Keyliss Moisturizing Mask",          unit:"гр", price:5.83,    cat:"🧪 Уход"},
+  {id:32,name:"Keyliss Veg.Smooth Fluid",           unit:"мл", price:74.33,   cat:"🧪 Уход"},
+  {id:33,name:"Вуаль Style Proof-Humidity Proof",   unit:"мл", price:6.93,    cat:"🧪 Уход"},
+  {id:34,name:"Лак Style Proof-Eco Fixing Spray",   unit:"мл", price:6.34,    cat:"🧪 Уход"},
+  {id:35,name:"Биозавивка SEKTA",                   unit:"мл", price:2.4667,  cat:"⚗️ Химия"},
+  {id:36,name:"Кислотная смывка (Hair Sekta)",      unit:"мл", price:1.50,    cat:"⚗️ Химия"},
+];
+
+const KIT={cut:60,color:150,complex:400};
+
+// mats: [{matId, qty}] — дефолтный расход из Notion
+const SVCS=[
+  {name:"Стрижка мужская",                       price:1300, dur:1,    rw:[6,8],   type:"cut",     kit:"cut",
+   mats:[{matId:12,qty:20}]},
+  {name:"Стрижка женская",                       price:2500, dur:1.5,  rw:[6,8],   type:"cut",     kit:"cut",
+   mats:[{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"Камуфляж седины",                       price:2200, dur:1.5,  rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:40},{matId:9,qty:40},{matId:12,qty:20}]},
+  {name:"Окрашивание корней",                    price:5000, dur:2,    rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:9,qty:40},{matId:1,qty:40},{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"Окрашивание один тон",                  price:6500, dur:2.5,  rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:100},{matId:9,qty:100},{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"Тонирование",                           price:5500, dur:2,    rw:[4,6],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:40},{matId:9,qty:80},{matId:13,qty:20},{matId:12,qty:40}]},
+  {name:"Цветное окрашивание",                   price:4200, dur:2.5,  rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:60},{matId:9,qty:60},{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"Растяжка цвета",                        price:8500, dur:3,    rw:[8,12],  type:"complex", kit:"complex",
+   mats:[{matId:3,qty:80},{matId:9,qty:150},{matId:1,qty:40},{matId:12,qty:80},{matId:13,qty:40}]},
+  {name:"Тотал блонд",                           price:12000,dur:5,    rw:[4,5],   type:"blonde",  kit:"color",
+   mats:[{matId:3,qty:100},{matId:9,qty:100},{matId:12,qty:80},{matId:28,qty:100},{matId:1,qty:20},{matId:13,qty:20}]},
+  {name:"Блонд корни (1,5 см) + стрижка",        price:7500, dur:3,    rw:[4,4],   type:"blonde",  kit:"complex",
+   mats:[{matId:3,qty:30},{matId:9,qty:140},{matId:12,qty:80},{matId:28,qty:50},{matId:1,qty:20},{matId:13,qty:40}]},
+  {name:"Сложное окрашивание",                   price:10000,dur:5,    rw:[8,12],  type:"complex", kit:"complex",
+   mats:[{matId:3,qty:180},{matId:9,qty:600},{matId:12,qty:80},{matId:28,qty:30},{matId:2,qty:20},{matId:13,qty:40}]},
+  {name:"Декапирование до 5 тонов",              price:10500,dur:6,    rw:[8,10],  type:"decap",   kit:"complex",
+   mats:[{matId:36,qty:120},{matId:12,qty:120},{matId:1,qty:100},{matId:9,qty:20},{matId:28,qty:60},{matId:13,qty:40}]},
+  {name:"Декапирование свыше 5 тонов",           price:13500,dur:4,    rw:[8,10],  type:"decap",   kit:"complex",
+   mats:[{matId:36,qty:120},{matId:12,qty:80},{matId:1,qty:60},{matId:9,qty:20}]},
+  {name:"Биозавивка",                            price:5500, dur:4,    rw:[10,14], type:"perm",    kit:"cut",
+   mats:[{matId:35,qty:80},{matId:12,qty:20},{matId:13,qty:10}]},
+  {name:"Интенсивный салонный уход (REB.LOOM)",  price:6000, dur:2,    rw:[2,4],   type:"care",    kit:"color",
+   mats:[{matId:23,qty:40},{matId:24,qty:10},{matId:25,qty:30},{matId:26,qty:30}]},
+  {name:"Экспресс уход + укладка",               price:2000, dur:1,    rw:[2,4],   type:"care",    kit:"cut",
+   mats:[{matId:12,qty:30},{matId:13,qty:20}]},
+  {name:"Укладка браш/стайлер",                  price:2500, dur:1.5,  rw:null,    type:"styling", kit:"cut",
+   mats:[{matId:12,qty:20}]},
+  {name:"Консультация",                          price:0,    dur:0.5,  rw:null,    type:"consult", kit:null,
+   mats:[]},
+  {name:"КОМБО 1: Мужская стрижка + камуфляж",   price:3200, dur:1.5,  rw:[5,7],   type:"color",   kit:"cut",
+   mats:[{matId:12,qty:20}]},
+  {name:"КОМБО 2: Окрашивание корней + чёлка",   price:5500, dur:2.5,  rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:40},{matId:9,qty:40},{matId:12,qty:20},{matId:13,qty:10}]},
+  {name:"КОМБО 3: Окрашивание корней + стрижка", price:6500, dur:3,    rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:9,qty:40},{matId:1,qty:40},{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"КОМБО 4: Стрижка + экспресс уход",      price:4200, dur:1.75, rw:[6,8],   type:"cut",     kit:"cut",
+   mats:[{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"КОМБО 5: Окрашивание 1 тон + стрижка",  price:8100, dur:3,    rw:[5,7],   type:"color",   kit:"color",
+   mats:[{matId:1,qty:100},{matId:9,qty:100},{matId:12,qty:40},{matId:13,qty:20}]},
+  {name:"КОМБО 6: Сложное окрашивание + уход",   price:10000,dur:5,    rw:[8,12],  type:"complex", kit:"complex",
+   mats:[{matId:3,qty:180},{matId:9,qty:600},{matId:12,qty:80},{matId:28,qty:30},{matId:2,qty:20},{matId:13,qty:40},{matId:23,qty:40},{matId:26,qty:30}]},
+  {name:"КОМБО 7: Тотал блонд + укладка",        price:13500,dur:5,    rw:[4,5],   type:"blonde",  kit:"complex",
+   mats:[{matId:3,qty:100},{matId:10,qty:40},{matId:12,qty:80},{matId:28,qty:100},{matId:1,qty:20},{matId:13,qty:20}]},
+];
+
+const CARE={
+  color:{
+    label:"ПОСЛЕ ОКРАШИВАНИЯ", bg:"#1A3A9A",
+    tips:["Не мыть голову 48–72 часа после процедуры","Холодная вода при ополаскивании — закрывает чешуйку, цвет держится дольше","Шампунь и кондиционер «для окрашенных» первые 4 недели — обязательно","UV-спрей при выходе на солнце — выгорание начинается с первого дня","Маска с протеинами шёлка 1 раз в неделю, 20 мин под плёнкой"],
+    rec:["Шампунь HS для окрашенных","Кондиционер HS для окрашенных","Маска HS Раньше было лучше"],
+  },
+  blonde:{
+    label:"ПОСЛЕ БЛОНДА / ОСВЕТЛЕНИЯ", bg:"#D42B2B",
+    tips:["Не мыть голову 72 часа — чешуйка должна закрыться","Питательная или протеиновая маска при каждом мытье первые 2 недели","Горячие инструменты — под запретом минимум 1 неделю","Кератиновый или протеиновый уход — обязательно в течение месяца","Термозащита при любом нагреве, t° не выше 150°C","Тонировать через 2–4 недели для поддержания оттенка"],
+    rec:["REB.LOOM Шампунь (шаг 1)","REB.LOOM Маска (шаг 3)","REB.LOOM Эссенция (ампулы)"],
+  },
+  complex:{
+    label:"ПОСЛЕ СЛОЖНОГО ОКРАШИВАНИЯ", bg:"#C4895A",
+    tips:["Восстанавливающий уход 2 раза в неделю в течение месяца","Шампунь без сульфатов и без силиконов — структура ослаблена","Несмываемая сыворотка после каждого мытья","Термозащита обязательна даже при укладке феном","Глубокая маска 30 мин под плёнкой раз в неделю"],
+    rec:["REB.LOOM Эссенция (ампулы)","Вуаль Style Proof-Humidity Proof","Keyliss Moisturizing Mask"],
+  },
+  decap:{
+    label:"ПОСЛЕ ДЕКАПИРОВАНИЯ", bg:"#D42B2B",
+    tips:["Интенсивный восстанавливающий уход — обязателен как курс","Горячие инструменты — запрещены минимум 7–10 дней","Протеиновая маска при каждом мытье первые 3 недели","Следующая химическая процедура — не ранее чем через 4 недели","При сухости — масляное обёртывание раз в 2 недели"],
+    rec:["REB.LOOM Шампунь (шаг 1)","REB.LOOM Эссенция (ампулы)","Протеиновая маска HS (300 мл)"],
+  },
+  perm:{
+    label:"ПОСЛЕ БИОЗАВИВКИ", bg:"#1A3A9A",
+    tips:["Не мыть волосы 3–5 дней после процедуры","Не стягивать волосы резинками — примнёшь локоны","Только мягкие шампуни без сульфатов","Интенсивное увлажнение — маска 2–3 раза в неделю","Расчёсывать только пальцами или широким гребнем"],
+    rec:["Шампунь HS для натуральных","Keyliss Moisturizing Mask","REB.LOOM DD Fluid Leave in"],
+  },
+  cut:{
+    label:"ПОСЛЕ СТРИЖКИ", bg:"#1A3A9A",
+    tips:["Лёгкое масло на кончики для предотвращения сечения","Расчёсывать от кончиков к корням — без рывков","Укладочные средства умеренно — не перегружать структуру"],
+    rec:["Вуаль Style Proof-Humidity Proof","Лак Style Proof-Eco Fixing Spray"],
+  },
+  care:{
+    label:"ПОСЛЕ ВОССТАНАВЛИВАЮЩЕГО УХОДА", bg:"#C4895A",
+    tips:["Повторить через 2–4 недели для накопительного эффекта","Домашний уход поддерживать: маска раз в неделю","Вода при мытье — тёплая, не горячая","Избегать химических процедур минимум 2 недели"],
+    rec:["REB.LOOM Маска (шаг 3)","Keyliss Moisturizing Mask","REB.LOOM DD Fluid Leave in"],
+  },
+  styling:{
+    label:"ПОДДЕРЖАНИЕ УКЛАДКИ", bg:"#1A3A9A",
+    tips:["Термозащита при каждой укладке — без исключений","Увлажняющая сыворотка на влажные волосы перед феном","Финиш — лёгкая вуаль или спрей для блеска"],
+    rec:["Вуаль Style Proof-Humidity Proof","Лак Style Proof-Eco Fixing Spray"],
+  },
+  consult:{
+    label:"ПОСЛЕ КОНСУЛЬТАЦИИ", bg:"#C4895A",
+    tips:["Следуйте рекомендованному плану процедур","При любых вопросах — записывайтесь на повторную консультацию"],
+    rec:[],
+  },
+};
+
+// ── УТИЛИТЫ ────────────────────────────────────────────────
+const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+const todayStr=()=>new Date().toISOString().split('T')[0];
+const fmtDate=d=>new Date(d+'T00:00:00').toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+const addWks=(dateStr,wks)=>{const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+wks*7);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const cats=[...new Set(MATS.map(m=>m.cat))];
+const getMat=id=>MATS.find(m=>m.id===Number(id));
+
+// ── ПРИЛОЖЕНИЕ ─────────────────────────────────────────────
+function App(){
+  const[tab,setTab]=useState('calc');
+  const[slogan]=useState(()=>SLOGANS[Math.floor(Math.random()*SLOGANS.length)]);
+  const[clients,setClients]=useState(()=>{try{return JSON.parse(localStorage.getItem('mkvk4')||'[]');}catch{return[];}});
+
+  useEffect(()=>{localStorage.setItem('mkvk4',JSON.stringify(clients));},[clients]);
+
+  const addClient=c=>setClients(p=>[c,...p]);
+  const delClient=id=>{if(window.confirm('Удалить запись?'))setClients(p=>p.filter(c=>c.id!==id));};
+
+  const td=todayStr();
+  const tdClients=clients.filter(c=>c.date===td);
+  const tdRev=tdClients.reduce((s,c)=>s+(c.price||0),0);
+  const tdCost=tdClients.reduce((s,c)=>s+(c.cost||0),0);
+
+  return(
+    <div style={{minHeight:'100vh'}}>
+      {/* ШАПКА */}
+      <header style={{background:'#1A1208',position:'relative',overflow:'hidden'}}>
+        <div className="stripe" style={{position:'absolute',inset:0,opacity:0.4}}/>
+        <div style={{position:'relative',zIndex:1}}>
+          {/* Логотип */}
+          <div style={{padding:'18px 24px 10px',display:'flex',alignItems:'flex-end',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+            <div>
+              <div className="MF" style={{display:'flex',alignItems:'baseline',lineHeight:1}}>
+                <span style={{fontSize:42,fontWeight:900,color:'#D42B2B',letterSpacing:-2}}>МАЯКОВ</span>
+                <span style={{fontSize:42,fontWeight:900,color:'#FAF3E8',letterSpacing:-2}}>КА</span>
+                <span style={{fontSize:42,fontWeight:900,color:'#F5C800'}}>&#96;4</span>
+              </div>
+              <div className="MF" style={{fontSize:9,letterSpacing:5,color:'#C4895A',marginTop:4}}>✂ ПАРИКМАХЕРСКАЯ · МАНИФЕСТ КРАСОТЫ ✂</div>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
+              <div style={{display:'flex',gap:4}}>
+                {['#D42B2B','#1A3A9A','#F5C800','#C4895A'].map((c,i)=><div key={i} style={{width:20,height:44,background:c,border:'1px solid rgba(255,255,255,0.15)'}}/>)}
+              </div>
+              <div className="MF" style={{fontSize:8,letterSpacing:3,color:'rgba(255,255,255,0.3)'}}>КРАСНЫЙ · СИНИЙ · ЖЁЛТЫЙ · КРАФТ</div>
+            </div>
+          </div>
+
+          {/* Слоган */}
+          <div style={{background:'#D42B2B',borderTop:'2px solid #F5C800',borderBottom:'2px solid #F5C800',padding:'9px 24px',display:'flex',alignItems:'center',gap:14,flexWrap:'wrap'}}>
+            <span className="MF" style={{color:'#F5C800',fontSize:10,letterSpacing:3,flexShrink:0}}>⚡ ЛОЗУНГ ДНЯ:</span>
+            <span style={{color:'#FAF3E8',fontSize:14,fontStyle:'italic'}}>«{slogan}»</span>
+          </div>
+
+          {/* Навигация */}
+          <div style={{display:'flex',background:'#1A3A9A',borderTop:'1px solid rgba(255,255,255,0.1)',alignItems:'stretch'}}>
+            {[['calc','✦ РАСЧЁТ УСЛУГИ'],['crm','📋 БАЗА КЛИЕНТОВ'],['finance','💰 ФИНШТАБ']].map(([id,l])=>(
+              <button key={id} onClick={()=>setTab(id)} className="MF" style={{padding:'12px 22px',background:tab===id?'#F5C800':'transparent',border:'none',borderRight:'1px solid rgba(255,255,255,0.12)',color:tab===id?'#1A1208':'rgba(255,255,255,0.65)',fontSize:11,letterSpacing:2,fontWeight:700,transition:'all .14s'}}>{l}</button>
+            ))}
+            <div style={{marginLeft:'auto',display:'flex',alignItems:'center',padding:'0 20px',gap:10}}>
+              <span className="MF" style={{fontSize:9,color:'rgba(255,255,255,0.45)',letterSpacing:2}}>СЕГОДНЯ:</span>
+              <span className="MF" style={{fontSize:18,color:'#F5C800',fontWeight:900}}>{fmt(tdRev)} ₽</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* КОНТЕНТ */}
+      <main style={{maxWidth:1140,margin:'0 auto',padding:'24px 18px'}}>
+        {tab==='calc'&&<CalcTab onSave={addClient}/>}
+        {tab==='crm'&&<CrmTab clients={clients} onDelete={delClient}/>}
+        {tab==='finance'&&<FinTab clients={clients} tdRev={tdRev} tdCost={tdCost} tdClients={tdClients}/>}
+      </main>
+
+      <footer className="MF" style={{background:'#1A1208',color:'#C4895A',textAlign:'center',padding:'14px',fontSize:9,letterSpacing:5,marginTop:40}}>
+        МАЯКОВКА&#96;4 · ПАРИКМАХЕРСКАЯ · МАНИФЕСТ КРАСОТЫ · {new Date().getFullYear()}
+      </footer>
+    </div>
+  );
+}
+
+// ── КАЛЬКУЛЯТОР ────────────────────────────────────────────
+function CalcTab({onSave}){
+  const[rows,setRows]=useState([{id:uid(),matId:'',qty:''}]);
+  const[svc,setSvc]=useState(null);
+  const[name,setName]=useState('');
+  const[formula,setFormula]=useState('');
+  const[showRec,setShowRec]=useState(false);
+  const[flash,setFlash]=useState(false);
+
+  const pickSvc=name=>{
+    const s=SVCS.find(x=>x.name===name)||null;
+    setSvc(s);
+    if(s&&s.mats&&s.mats.length>0){
+      setRows(s.mats.map(m=>({id:uid(),matId:String(m.matId),qty:String(m.qty)})));
+    } else {
+      setRows([{id:uid(),matId:'',qty:''}]);
+    }
+    setShowRec(false);
+  };
+
+  const addRow=()=>setRows(r=>[...r,{id:uid(),matId:'',qty:''}]);
+  const delRow=id=>setRows(r=>r.filter(x=>x.id!==id));
+  const updRow=(id,f,v)=>setRows(r=>r.map(x=>x.id===id?{...x,[f]:v}:x));
+
+  const matCost=rows.reduce((s,r)=>{const m=getMat(r.matId);return m&&r.qty?s+m.price*Number(r.qty):s;},0);
+  const kitCost=svc?.kit?(KIT[svc.kit]||0):0;
+  const total=matCost+kitCost;
+  const profit=(svc?.price||0)-total;
+  const pct=svc?.price>0?Math.round(profit/svc.price*100):0;
+
+  const matList=rows.filter(r=>r.matId&&r.qty).map(r=>{const m=getMat(r.matId);return m?`${m.name} — ${r.qty} ${m.unit}`:''}).filter(Boolean);
+
+  const save=()=>{
+    if(!svc){alert('Выберите услугу!');return;}
+    onSave({id:uid(),name:name||`Клиент #${Date.now().toString().slice(-4)}`,date:todayStr(),service:svc.name,price:svc.price,cost:parseFloat(total.toFixed(2)),profit:parseFloat(profit.toFixed(2)),formula,materials:matList,kitCost});
+    setFlash(true);setTimeout(()=>setFlash(false),2500);
+  };
+
+  const reset=()=>{setRows([{id:uid(),matId:'',qty:''}]);setSvc(null);setName('');setFormula('');setShowRec(false);setFlash(false);};
+
+  return(
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20,alignItems:'start'}}>
+
+      {/* ЛЕВАЯ КОЛОНКА */}
+      <div style={{display:'grid',gap:20}}>
+
+        {/* Услуга */}
+        <div className="card" style={{overflow:'hidden'}}>
+          <div className="MF" style={{background:'#D42B2B',color:'#fff',padding:'10px 16px',fontSize:10,letterSpacing:3}}>ШАГ 1 — ВЫБЕРИТЕ УСЛУГУ</div>
+          <div style={{padding:16}}>
+            <select value={svc?.name||''} onChange={e=>pickSvc(e.target.value)}>
+              <option value="">— выберите услугу из прайса —</option>
+              {SVCS.map(s=><option key={s.name} value={s.name}>{s.name} — {s.price.toLocaleString('ru-RU')} ₽ ({s.dur}ч)</option>)}
+            </select>
+            {svc&&(
+              <div style={{marginTop:12,display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+                <IB label="ПРАЙС" val={`${fmt(svc.price)} ₽`} bg="#1A3A9A"/>
+                <IB label="ВРЕМЯ" val={`${svc.dur} ч`} bg="#C4895A"/>
+                {svc.rw&&<IB label="СЛЕДУЮЩИЙ ВИЗИТ" val={`${svc.rw[0]}–${svc.rw[1]} нед`} bg="#D42B2B" span/>}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Клиент */}
+        <div className="card" style={{overflow:'hidden'}}>
+          <div className="MF" style={{background:'#1A3A9A',color:'#F5C800',padding:'10px 16px',fontSize:10,letterSpacing:3}}>ШАГ 2 — ДАННЫЕ КЛИЕНТА</div>
+          <div style={{padding:16,display:'grid',gap:10}}>
+            <div>
+              <label className="MF" style={{fontSize:9,letterSpacing:2,color:'#C4895A',display:'block',marginBottom:4}}>ИМЯ / НОМЕР КЛИЕНТА</label>
+              <input placeholder="Анна Ивановна · Клиент #01" value={name} onChange={e=>setName(e.target.value)}/>
+            </div>
+            <div>
+              <label className="MF" style={{fontSize:9,letterSpacing:2,color:'#C4895A',display:'block',marginBottom:4}}>ФОРМУЛА / ПРИМЕЧАНИЕ К КЛИЕНТУ</label>
+              <textarea placeholder="Пример: CROMAKEY 7.0 (60г) + оксид 20vol (80мл). Пористые концы, тоник на 10 мин..." value={formula} onChange={e=>setFormula(e.target.value)} rows={4} style={{resize:'vertical'}}/>
+            </div>
+          </div>
+        </div>
+
+        {/* Кнопки */}
+        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+          <button className="btn-r" style={{flex:1,fontSize:13}} onClick={save}>{flash?'✓ СОХРАНЕНО В БАЗУ!':'💾 СОХРАНИТЬ КЛИЕНТА'}</button>
+          {svc&&<button className="btn-b" style={{flex:1}} onClick={()=>setShowRec(s=>!s)}>{showRec?'▲ СКРЫТЬ':'▼ РЕКОМЕНДАЦИИ'}</button>}
+          <button className="btn-g" onClick={reset}>СБРОС</button>
+        </div>
+      </div>
+
+      {/* ПРАВАЯ КОЛОНКА — материалы */}
+      <div style={{display:'grid',gap:20}}>
+        <div className="card" style={{overflow:'hidden'}}>
+          <div className="MF" style={{background:'#C4895A',color:'#fff',padding:'10px 16px',fontSize:10,letterSpacing:3,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span>ШАГ 3 — РАСХОД МАТЕРИАЛОВ</span><span style={{fontSize:9,opacity:0.75,letterSpacing:1}}>✎ ГРАММЫ МОЖНО РЕДАКТИРОВАТЬ</span>
+            <button className="btn-y" style={{padding:'4px 12px',fontSize:10}} onClick={addRow}>+ СТРОКУ</button>
+          </div>
+          <div style={{overflowX:'auto'}}>
+            <table>
+              <thead><tr><th style={{width:'45%'}}>МАТЕРИАЛ</th><th>КОЛ-ВО</th><th>₽/ЕД</th><th>ИТОГО</th><th></th></tr></thead>
+              <tbody>
+                {rows.map((row,i)=>{
+                  const m=getMat(row.matId);
+                  const rc=m&&row.qty?m.price*Number(row.qty):0;
+                  return(
+                    <tr key={row.id}>
+                      <td>
+                        <select value={row.matId} onChange={e=>updRow(row.id,'matId',e.target.value)} style={{fontSize:12}}>
+                          <option value="">— выбрать материал —</option>
+                          {cats.map(cat=>(
+                            <optgroup key={cat} label={cat}>
+                              {MATS.filter(x=>x.cat===cat).map(x=><option key={x.id} value={x.id}>{x.name} ({x.unit})</option>)}
+                            </optgroup>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <div style={{display:'flex',alignItems:'center',gap:4}}>
+                          <input type="number" min="0" placeholder="0" value={row.qty} onChange={e=>updRow(row.id,'qty',e.target.value)} style={{width:62,textAlign:'right',fontSize:14}}/>
+                          <span className="MF" style={{fontSize:10,color:'#C4895A',whiteSpace:'nowrap'}}>{m?.unit||''}</span>
+                        </div>
+                      </td>
+                      <td style={{fontSize:12,color:'#C4895A',fontWeight:'bold',whiteSpace:'nowrap'}}>{m?m.price.toFixed(2):'—'}</td>
+                      <td style={{fontWeight:'bold',color:rc>0?'#D42B2B':'#ccc',whiteSpace:'nowrap'}}>{rc>0?`${rc.toFixed(0)} ₽`:'—'}</td>
+                      <td>{rows.length>1&&<button onClick={()=>delRow(row.id)} style={{background:'none',border:'none',color:'#D42B2B',fontSize:20,lineHeight:1}}>×</button>}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Итоги */}
+          <div style={{borderTop:'3px solid #1A1208'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',borderBottom:'2px solid #1A1208'}}>
+              <div style={{padding:'10px 14px',borderRight:'1px solid #d4c4a8'}}>
+                <div className="MF" style={{fontSize:9,color:'#C4895A',letterSpacing:2}}>МАТЕРИАЛЫ</div>
+                <div className="MF" style={{fontSize:20,fontWeight:900}}>{fmt(matCost)} ₽</div>
+              </div>
+              <div style={{padding:'10px 14px'}}>
+                <div className="MF" style={{fontSize:9,color:'#C4895A',letterSpacing:2}}>НАБОР РАСХОДНИКОВ</div>
+                <div className="MF" style={{fontSize:20,fontWeight:900}}>{kitCost} ₽</div>
+                {svc?.kit&&<div style={{fontSize:10,color:'#C4895A'}}>{svc.kit==='cut'?'Стрижка/укладка':svc.kit==='color'?'Окрашивание':'Сложная техника'}</div>}
+              </div>
+            </div>
+            <div style={{background:'#1A1208',color:'#F5C800',padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <span className="MF" style={{letterSpacing:3,fontSize:11}}>СЕБЕСТОИМОСТЬ:</span>
+              <span className="MF" style={{fontSize:24,fontWeight:900}}>{fmt(total)} ₽</span>
+            </div>
+            {svc&&(
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr'}}>
+                <div style={{padding:'12px 14px',background:'#F5C800',borderRight:'2px solid #1A1208'}}>
+                  <div className="MF" style={{fontSize:9,letterSpacing:2,color:'rgba(26,18,8,0.6)'}}>ЦЕНА В ПРАЙСЕ</div>
+                  <div className="MF" style={{fontSize:22,fontWeight:900,color:'#1A1208'}}>{fmt(svc.price)} ₽</div>
+                </div>
+                <div style={{padding:'12px 14px',background:profit>=0?'#e8f5e9':'#ffebee'}}>
+                  <div className="MF" style={{fontSize:9,letterSpacing:2,color:profit>=0?'#1b5e20':'#b71c1c'}}>ПРИБЫЛЬ ({pct}%)</div>
+                  <div className="MF" style={{fontSize:22,fontWeight:900,color:profit>=0?'#2e7d32':'#c62828'}}>{fmt(profit)} ₽</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Рекомендации — полная ширина */}
+      {showRec&&svc&&(
+        <div style={{gridColumn:'1/-1'}} className="fi">
+          <RecBlock svc={svc}/>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function IB({label,val,bg,span}){
+  return<div className="MF" style={{background:bg,color:'#fff',padding:'10px 14px',gridColumn:span?'1/-1':undefined}}>
+    <div style={{fontSize:9,letterSpacing:2,opacity:0.8}}>{label}</div>
+    <div style={{fontSize:18,fontWeight:900}}>{val}</div>
+  </div>;
+}
+
+function RecBlock({svc}){
+  const care=CARE[svc.type]||CARE.cut;
+  const rw=svc.rw;
+  const dMin=rw?addWks(todayStr(),rw[0]):null;
+  const dMax=rw&&rw[1]!==rw[0]?addWks(todayStr(),rw[1]):null;
+  const dots=['#D42B2B','#1A3A9A','#F5C800','#C4895A','#D42B2B'];
+
+  return(
+    <div className="card" style={{overflow:'hidden'}}>
+      <div className="MF" style={{background:care.bg,color:'#fff',padding:'12px 18px',fontSize:10,letterSpacing:3,display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:8}}>
+        <span>✦ {care.label}</span>
+        {dMin&&<span style={{background:'#F5C800',color:'#1A1208',padding:'4px 12px',fontSize:11}}>📅 СЛЕД. ВИЗИТ: {dMin}{dMax?` — ${dMax}`:''}</span>}
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr'}}>
+        <div style={{padding:18,borderRight:'2px solid #1A1208'}}>
+          <div className="MF" style={{fontSize:9,letterSpacing:2,color:'#C4895A',marginBottom:12}}>СОВЕТЫ ПО УХОДУ:</div>
+          {care.tips.map((t,i)=>(
+            <div key={i} style={{display:'flex',gap:10,marginBottom:10,paddingBottom:10,borderBottom:i<care.tips.length-1?'1px solid #e8ddd0':'none'}}>
+              <div style={{width:8,height:8,background:dots[i%5],flexShrink:0,marginTop:5}}/>
+              <span style={{fontSize:13,lineHeight:1.6}}>{t}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{padding:18,background:'#f7f0e6'}}>
+          <div className="MF" style={{fontSize:9,letterSpacing:2,color:'#C4895A',marginBottom:12}}>РЕКОМЕНДУЕМЫЕ ПРОДУКТЫ:</div>
+          {care.rec.length>0?care.rec.map((p,i)=>(
+            <div key={i} style={{padding:'8px 12px',background:'#fff',border:'2px solid #1A1208',marginBottom:8,fontSize:13}}>✦ {p}</div>
+          )):<span style={{fontSize:13,color:'#C4895A'}}>—</span>}
+          {rw&&(
+            <div style={{marginTop:14,padding:'10px 12px',background:'#F5C800',border:'2px solid #1A1208'}}>
+              <div className="MF" style={{fontSize:9,letterSpacing:2,marginBottom:4}}>ЗАПИСАТЬ НА ПОВТОРНЫЙ ВИЗИТ:</div>
+              <div style={{fontSize:13,fontWeight:'bold'}}>{rw[0]===rw[1]?`Через ${rw[0]} нед.`:`Через ${rw[0]}–${rw[1]} нед.`}</div>
+              {dMin&&<div style={{fontSize:12,color:'#555',marginTop:4}}>{dMin}{dMax?` — ${dMax}`:''}</div>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── CRM ────────────────────────────────────────────────────
+function CrmTab({clients,onDelete}){
+  const[search,setSearch]=useState('');
+  const[fdate,setFdate]=useState('');
+  const filtered=clients.filter(c=>{
+    const q=search.toLowerCase();
+    return(!q||c.name?.toLowerCase().includes(q)||c.service?.toLowerCase().includes(q))&&(!fdate||c.date===fdate);
+  });
+
+  const expJSON=()=>{
+    const b=new Blob([JSON.stringify(clients,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`mayakovka4_${todayStr()}.json`;a.click();
+  };
+  const expCSV=()=>{
+    const h='ID,Имя,Дата,Услуга,Прайс,Себестоимость,Прибыль,Формула,Материалы\n';
+    const rows=clients.map(c=>`"${c.id}","${c.name}","${c.date}","${c.service}",${c.price},${c.cost?.toFixed(0)||0},${c.profit?.toFixed(0)||0},"${(c.formula||'').replace(/"/g,'""')}","${(c.materials||[]).join('; ').replace(/"/g,'""')}"`).join('\n');
+    const b=new Blob(['\uFEFF'+h+rows],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`mayakovka4_${todayStr()}.csv`;a.click();
+  };
+
+  return(
+    <div>
+      <div className="card" style={{padding:16,marginBottom:20,display:'flex',gap:10,flexWrap:'wrap',alignItems:'center'}}>
+        <div className="MF" style={{background:'#D42B2B',color:'#fff',padding:'8px 16px',fontSize:10,letterSpacing:3,flexShrink:0}}>📋 БАЗА — {clients.length} ЗАП.</div>
+        <input placeholder="🔍 Поиск по имени или услуге..." value={search} onChange={e=>setSearch(e.target.value)} style={{flex:1,minWidth:180}}/>
+        <input type="date" value={fdate} onChange={e=>setFdate(e.target.value)} style={{width:160}}/>
+        {fdate&&<button className="btn-g" style={{padding:'8px 12px'}} onClick={()=>setFdate('')}>✕</button>}
+        <button className="btn-b" onClick={expJSON}>⬇ JSON</button>
+        <button className="btn-y" onClick={expCSV}>⬇ CSV</button>
+      </div>
+
+      {filtered.length===0?(
+        <div style={{textAlign:'center',padding:'60px 20px'}}>
+          <div className="MF" style={{fontSize:60,opacity:0.08}}>📋</div>
+          <div className="MF" style={{fontSize:14,letterSpacing:4,color:'#C4895A',marginTop:16}}>
+            {clients.length===0?'БАЗА ПУСТА. ЗАПИСЫВАЙТЕ ПЕРВОГО КЛИЕНТА!':'НИЧЕГО НЕ НАЙДЕНО'}
+          </div>
+        </div>
+      ):(
+        <div style={{display:'grid',gap:12}}>
+          {filtered.map(c=><ClientCard key={c.id} client={c} onDelete={onDelete}/>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ClientCard({client,onDelete}){
+  const[open,setOpen]=useState(false);
+  const p=client.profit||0;
+  return(
+    <div className="card fi" style={{overflow:'hidden'}}>
+      <div style={{padding:'14px 18px',display:'flex',alignItems:'center',gap:14,cursor:'pointer',flexWrap:'wrap'}} onClick={()=>setOpen(s=>!s)}>
+        <div className="MF" style={{background:'#1A1208',color:'#F5C800',padding:'6px 12px',flexShrink:0,fontSize:11}}>{fmtDate(client.date)}</div>
+        <div style={{flex:1,minWidth:140}}>
+          <div className="MF" style={{fontSize:15,fontWeight:900}}>{client.name}</div>
+          <div style={{fontSize:12,color:'#C4895A',marginTop:2}}>{client.service}</div>
+        </div>
+        <div style={{display:'flex',gap:16,flexWrap:'wrap',alignItems:'center'}}>
+          <Num label="ПРАЙС" val={`${fmt(client.price)} ₽`} color="#1A3A9A"/>
+          <Num label="С/С" val={`${fmt(client.cost)} ₽`} color="#C4895A"/>
+          <Num label="ПРИБЫЛЬ" val={`${fmt(p)} ₽`} color={p>=0?'#2e7d32':'#c62828'}/>
+        </div>
+        <div style={{display:'flex',gap:10,alignItems:'center'}}>
+          <span style={{color:'#1A3A9A',fontSize:14}}>{open?'▲':'▼'}</span>
+          <button onClick={e=>{e.stopPropagation();onDelete(client.id);}} style={{background:'none',border:'none',color:'#D42B2B',fontSize:22,lineHeight:1}}>×</button>
+        </div>
+      </div>
+      {open&&(
+        <div style={{padding:'14px 18px',background:'#f7f0e6',borderTop:'2px solid #1A1208'}} className="fi">
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+            {client.formula&&(
+              <div>
+                <div className="MF" style={{fontSize:9,letterSpacing:3,color:'#C4895A',marginBottom:6}}>ФОРМУЛА / ПРИМЕЧАНИЕ:</div>
+                <div style={{fontSize:13,lineHeight:1.7,fontStyle:'italic'}}>{client.formula}</div>
+              </div>
+            )}
+            {client.materials?.length>0&&(
+              <div>
+                <div className="MF" style={{fontSize:9,letterSpacing:3,color:'#C4895A',marginBottom:6}}>МАТЕРИАЛЫ:</div>
+                {client.materials.map((m,i)=><div key={i} style={{fontSize:12,padding:'4px 0',borderBottom:'1px solid #d4c4a8'}}>◆ {m}</div>)}
+              </div>
+            )}
+          </div>
+          {client.kitCost>0&&<div style={{marginTop:10,fontSize:12,color:'#C4895A'}}>Набор расходников: {client.kitCost} ₽</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Num({label,val,color}){
+  return<div style={{textAlign:'center'}}>
+    <div className="MF" style={{fontSize:9,color:'#C4895A',letterSpacing:1}}>{label}</div>
+    <div className="MF" style={{fontSize:16,fontWeight:900,color}}>{val}</div>
+  </div>;
+}
+
+// ── ФИНШТАБ ────────────────────────────────────────────────
+function FinTab({clients,tdRev,tdCost,tdClients}){
+  const tdProfit=tdRev-tdCost;
+
+  const byDate={};
+  clients.forEach(c=>{
+    if(!byDate[c.date])byDate[c.date]={rev:0,cost:0,cnt:0,svcs:[]};
+    byDate[c.date].rev+=c.price||0;
+    byDate[c.date].cost+=c.cost||0;
+    byDate[c.date].cnt+=1;
+    byDate[c.date].svcs.push(c.service);
+  });
+  const dates=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+
+  const totalRev=clients.reduce((s,c)=>s+(c.price||0),0);
+  const totalCost=clients.reduce((s,c)=>s+(c.cost||0),0);
+  const avgCheck=clients.length>0?totalRev/clients.length:0;
+  const bestDay=dates.length>0?dates.reduce((best,d)=>byDate[d].rev>byDate[best].rev?d:best,dates[0]):null;
+
+  return(
+    <div style={{display:'grid',gap:20}}>
+
+      {/* Сегодня */}
+      <div className="card" style={{overflow:'hidden'}}>
+        <div className="MF" style={{background:'#D42B2B',color:'#fff',padding:'12px 18px',fontSize:10,letterSpacing:3}}>
+          ⚡ ФИНАНСОВЫЙ ШТАБ — СЕГОДНЯ {fmtDate(todayStr())}
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(175px,1fr))'}}>
+          <BS label="ВЫРУЧКА" val={`${fmt(tdRev)} ₽`} bg="#1A3A9A" c="#F5C800"/>
+          <BS label="СЕБЕСТОИМОСТЬ" val={`${fmt(tdCost)} ₽`} bg="#C4895A" c="#fff"/>
+          <BS label="ПРИБЫЛЬ" val={`${fmt(tdProfit)} ₽`} bg={tdProfit>=0?"#2e7d32":"#c62828"} c="#fff"/>
+          <BS label="ВИЗИТОВ" val={tdClients.length} bg="#1A1208" c="#F5C800"/>
+        </div>
+        {tdClients.length>0&&(
+          <div style={{padding:'14px 18px',borderTop:'2px solid #1A1208'}}>
+            <div className="MF" style={{fontSize:9,letterSpacing:3,color:'#C4895A',marginBottom:10}}>СЕГОДНЯШНИЕ ВИЗИТЫ:</div>
+            {tdClients.map(c=>(
+              <div key={c.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:'1px solid #e8ddd0',fontSize:13,gap:8,flexWrap:'wrap'}}>
+                <span style={{fontWeight:'bold'}}>{c.name}</span>
+                <span style={{color:'#C4895A',fontSize:12}}>{c.service}</span>
+                <span className="MF" style={{fontWeight:900,color:'#D42B2B'}}>{fmt(c.price)} ₽</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Общая статистика */}
+      <div className="card" style={{overflow:'hidden'}}>
+        <div className="MF" style={{background:'#1A3A9A',color:'#F5C800',padding:'12px 18px',fontSize:10,letterSpacing:3}}>
+          📊 ОБЩАЯ СТАТИСТИКА — {clients.length} ВИЗИТОВ / {dates.length} ДНЕЙ
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(175px,1fr))'}}>
+          <BS label="ВЫРУЧКА ВСЕГО" val={`${fmt(totalRev)} ₽`} bg="#FAF3E8" c="#1A1208" border/>
+          <BS label="ПРИБЫЛЬ ВСЕГО" val={`${fmt(totalRev-totalCost)} ₽`} bg="#FAF3E8" c={totalRev-totalCost>=0?'#2e7d32':'#c62828'} border/>
+          <BS label="СРЕДНИЙ ЧЕК" val={`${fmt(avgCheck)} ₽`} bg="#FAF3E8" c="#1A3A9A" border/>
+          <BS label="ЛУЧШИЙ ДЕНЬ" val={bestDay?`${fmt(byDate[bestDay].rev)} ₽`:'—'} bg="#FAF3E8" c="#D42B2B" border sub={bestDay?fmtDate(bestDay):undefined}/>
+        </div>
+      </div>
+
+      {/* История */}
+      {dates.length>0&&(
+        <div className="card" style={{overflow:'hidden'}}>
+          <div className="MF" style={{background:'#C4895A',color:'#fff',padding:'12px 18px',fontSize:10,letterSpacing:3}}>📅 ИСТОРИЯ ПО ДНЯМ</div>
+          <div style={{overflowX:'auto'}}>
+            <table>
+              <thead>
+                <tr>
+                  <th>ДАТА</th><th>ВИЗИТОВ</th><th>ВЫРУЧКА</th><th>С/С</th><th>ПРИБЫЛЬ</th><th>МАРЖА</th><th>УСЛУГИ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dates.map(d=>{
+                  const r=byDate[d];const p=r.rev-r.cost;const m=r.rev>0?Math.round(p/r.rev*100):0;
+                  return(
+                    <tr key={d}>
+                      <td className="MF" style={{fontWeight:900,whiteSpace:'nowrap'}}>{fmtDate(d)}</td>
+                      <td style={{fontWeight:'bold',textAlign:'center'}}>{r.cnt}</td>
+                      <td className="MF" style={{fontWeight:900,color:'#1A3A9A',whiteSpace:'nowrap'}}>{fmt(r.rev)} ₽</td>
+                      <td style={{color:'#C4895A',whiteSpace:'nowrap'}}>{fmt(r.cost)} ₽</td>
+                      <td className="MF" style={{fontWeight:900,color:p>=0?'#2e7d32':'#c62828',whiteSpace:'nowrap'}}>{fmt(p)} ₽</td>
+                      <td style={{whiteSpace:'nowrap'}}>
+                        <span style={{background:m>=50?'#e8f5e9':m>=30?'#fff9c4':'#ffebee',border:`1px solid ${m>=50?'#c8e6c9':m>=30?'#fff176':'#ffcdd2'}`,padding:'2px 8px',fontSize:11,fontWeight:'bold',color:m>=50?'#2e7d32':m>=30?'#f57f17':'#c62828'}}>{m}%</span>
+                      </td>
+                      <td style={{fontSize:11,color:'#666',maxWidth:260}}>{[...new Set(r.svcs)].join(', ')}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BS({label,val,bg,c,border,sub}){
+  return<div style={{padding:'18px 16px',background:bg,borderRight:'2px solid #1A1208',border:border?'1px solid #d4c4a8':undefined}}>
+    <div className="MF" style={{fontSize:9,letterSpacing:3,color:border?'#C4895A':c,opacity:border?1:0.75,marginBottom:6}}>{label}</div>
+    <div className="MF" style={{fontSize:22,fontWeight:900,color:c}}>{val}</div>
+    {sub&&<div style={{fontSize:11,color:border?'#C4895A':c,opacity:0.7,marginTop:4}}>{sub}</div>}
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
