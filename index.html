@@ -333,14 +333,24 @@ function CalcTab({onSave}){
   const matCost=rows.reduce((s,r)=>{const m=getMat(r.matId);return m&&r.qty?s+m.price*Number(r.qty):s;},0);
   const kitCost=svc?.kit?(KIT[svc.kit]||0):0;
   const total=matCost+kitCost;
-  const profit=(svc?.price||0)-total;
-  const pct=svc?.price>0?Math.round(profit/svc.price*100):0;
+
+  // Базовая себестоимость материалов по дефолтным граммам из Notion
+  const baseMatCost=svc?.mats?.reduce((s,m)=>{const mat=getMat(m.matId);return mat?s+mat.price*m.qty:s;},0)||0;
+  const baseTotal=baseMatCost+kitCost;
+  // Превышение материалов над базой
+  const matOverrun=Math.max(0, matCost - baseMatCost);
+  // Итоговая цена клиенту = прайс + превышение (округляем до 50₽ вверх)
+  const adjustedPrice=svc?Math.ceil((svc.price + matOverrun)/50)*50:0;
+  const priceIncrease=adjustedPrice-(svc?.price||0);
+  const priceIncreasePct=svc?.price>0?Math.round(priceIncrease/svc.price*100):0;
+  const profit=adjustedPrice-total;
+  const pct=adjustedPrice>0?Math.round(profit/adjustedPrice*100):0;
 
   const matList=rows.filter(r=>r.matId&&r.qty).map(r=>{const m=getMat(r.matId);return m?`${m.name} — ${r.qty} ${m.unit}`:''}).filter(Boolean);
 
   const save=()=>{
     if(!svc){alert('Выберите услугу!');return;}
-    onSave({id:uid(),name:name||`Клиент #${Date.now().toString().slice(-4)}`,date:todayStr(),service:svc.name,price:svc.price,cost:parseFloat(total.toFixed(2)),profit:parseFloat(profit.toFixed(2)),formula,materials:matList,kitCost});
+    onSave({id:uid(),name:name||`Клиент #${Date.now().toString().slice(-4)}`,date:todayStr(),service:svc.name,price:adjustedPrice,basePrice:svc.price,cost:parseFloat(total.toFixed(2)),profit:parseFloat(profit.toFixed(2)),formula,materials:matList,kitCost,priceIncrease});
     setFlash(true);setTimeout(()=>setFlash(false),2500);
   };
 
@@ -453,14 +463,36 @@ function CalcTab({onSave}){
               <span className="MF" style={{fontSize:24,fontWeight:900}}>{fmt(total)} ₽</span>
             </div>
             {svc&&(
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr'}}>
-                <div style={{padding:'12px 14px',background:'#F5C800',borderRight:'2px solid #1A1208'}}>
-                  <div className="MF" style={{fontSize:9,letterSpacing:2,color:'rgba(26,18,8,0.6)'}}>ЦЕНА В ПРАЙСЕ</div>
-                  <div className="MF" style={{fontSize:22,fontWeight:900,color:'#1A1208'}}>{fmt(svc.price)} ₽</div>
+              <div>
+                {/* Базовая цена */}
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr'}}>
+                  <div style={{padding:'10px 14px',background:'#f7f0e6',borderRight:'2px solid #1A1208',borderBottom:'2px solid #1A1208'}}>
+                    <div className="MF" style={{fontSize:9,letterSpacing:2,color:'#C4895A'}}>БАЗОВАЯ ЦЕНА (ПРАЙС)</div>
+                    <div className="MF" style={{fontSize:18,fontWeight:900,color:'#1A1208',textDecoration:priceIncrease>0?'line-through':'none',opacity:priceIncrease>0?0.5:1}}>{fmt(svc.price)} ₽</div>
+                  </div>
+                  <div style={{padding:'10px 14px',background:priceIncrease>0?'#fff3e0':'#f7f0e6',borderBottom:'2px solid #1A1208'}}>
+                    <div className="MF" style={{fontSize:9,letterSpacing:2,color:priceIncrease>0?'#e65100':'#C4895A'}}>
+                      {priceIncrease>0?`ДОПЛАТА ЗА ОБЪЁМ +${priceIncreasePct}%`:'ОБЪЁМ В НОРМЕ'}
+                    </div>
+                    <div className="MF" style={{fontSize:18,fontWeight:900,color:priceIncrease>0?'#e65100':'#C4895A'}}>
+                      {priceIncrease>0?`+${fmt(priceIncrease)} ₽`:'—'}
+                    </div>
+                  </div>
                 </div>
+                {/* Итоговая цена клиенту */}
+                <div style={{background:priceIncrease>0?'#D42B2B':'#F5C800',padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'2px solid #1A1208'}}>
+                  <div>
+                    <div className="MF" style={{fontSize:9,letterSpacing:3,color:priceIncrease>0?'rgba(255,255,255,0.7)':'rgba(26,18,8,0.6)'}}>ИТОГОВАЯ ЦЕНА КЛИЕНТУ</div>
+                    {priceIncrease>0&&<div style={{fontSize:10,color:'rgba(255,255,255,0.7)',marginTop:2}}>базовая {fmt(svc.price)} + доп. объём {fmt(priceIncrease)}</div>}
+                  </div>
+                  <div className="MF" style={{fontSize:26,fontWeight:900,color:priceIncrease>0?'#F5C800':'#1A1208'}}>{fmt(adjustedPrice)} ₽</div>
+                </div>
+                {/* Прибыль */}
                 <div style={{padding:'12px 14px',background:profit>=0?'#e8f5e9':'#ffebee'}}>
-                  <div className="MF" style={{fontSize:9,letterSpacing:2,color:profit>=0?'#1b5e20':'#b71c1c'}}>ПРИБЫЛЬ ({pct}%)</div>
-                  <div className="MF" style={{fontSize:22,fontWeight:900,color:profit>=0?'#2e7d32':'#c62828'}}>{fmt(profit)} ₽</div>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <div className="MF" style={{fontSize:9,letterSpacing:2,color:profit>=0?'#1b5e20':'#b71c1c'}}>ПРИБЫЛЬ МАСТЕРА ({pct}% от итоговой цены)</div>
+                    <div className="MF" style={{fontSize:20,fontWeight:900,color:profit>=0?'#2e7d32':'#c62828'}}>{fmt(profit)} ₽</div>
+                  </div>
                 </div>
               </div>
             )}
